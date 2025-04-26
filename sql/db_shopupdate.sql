@@ -1,7 +1,8 @@
 #THIS SQL IS OPTIONAL, TO BE USED AFTER 'db_drops.sql'
 #THIS REQUIRES PROVIDED WZ FILES
+SET SQL_SAFE_UPDATES = 0;
 
-USE `heavenms`;
+USE `maplesauna`;
 
 # Scroll shop at Asia, chair shop at Kino Konoko, potion shop at T-1337
 INSERT INTO `shops` (`shopid`,`npcid`) VALUES
