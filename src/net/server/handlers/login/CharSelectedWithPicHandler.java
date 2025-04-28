@@ -87,7 +87,11 @@ public class CharSelectedWithPicHandler extends AbstractMaplePacketHandler {
             c.setCharacterOnSessionTransitionState(charId);
             
             try {
-                c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
+                if (c.getAccID() == 1) {
+                    c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName("192.168.1.183"), Integer.parseInt(socket[1]), charId));
+                } else {
+                    c.announce(MaplePacketCreator.getServerIP(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1]), charId));
+                }
             } catch (UnknownHostException | NumberFormatException e) {
                 e.printStackTrace();
             }

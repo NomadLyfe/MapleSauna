@@ -58,6 +58,10 @@ public class RankingLoginTask implements Runnable {
             charSelect.setInt(2, job);
         }
         ResultSet rs = charSelect.executeQuery();
+        if (rs == null) {
+            System.out.println("[Ranking Update] No characters found for update.");
+            return;
+        }        
         PreparedStatement ps = con.prepareStatement("UPDATE characters SET " + (job != -1 ? "jobRank = ?, jobRankMove = ? " : "rank = ?, rankMove = ? ") + "WHERE id = ?");
         int rank = 0;
         
@@ -71,7 +75,13 @@ public class RankingLoginTask implements Runnable {
             ps.setInt(1, rank);
             ps.setInt(2, rankMove);
             ps.setInt(3, rs.getInt("id"));
-            ps.executeUpdate();
+            try {
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println("[Ranking Update] Failed to update character rank, skipping...");
+                ex.printStackTrace();
+            }            
+            // ps.executeUpdate();
         }
         
         rs.close();
