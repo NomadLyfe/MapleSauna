@@ -64,7 +64,11 @@ public final class ChangeMapHandler extends AbstractMaplePacketHandler {
 			
                         chr.setSessionTransitionState();
 			try {
-				c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+                                if (c.getAccID() == 1) {
+                                        c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName("192.168.1.183"), Integer.parseInt(socket[1])));
+                                } else {
+                                        c.announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+                                }
 			} catch (UnknownHostException ex) {
                                 ex.printStackTrace();
 			}

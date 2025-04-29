@@ -1539,13 +1539,17 @@ public class MapleClient {
                 player.clearBanishPlayerData();
 		player.getClient().getChannelServer().removePlayer(player);
                 
-                player.saveCharToDB();
+            	player.saveCharToDB();
 		
                 player.setSessionTransitionState();
-                try {
-			announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+        try {	
+			if (getAccID() == 1) {
+				announce(MaplePacketCreator.getChannelChange(InetAddress.getByName("192.168.1.183"), Integer.parseInt(socket[1])));
+			} else {
+				announce(MaplePacketCreator.getChannelChange(InetAddress.getByName(socket[0]), Integer.parseInt(socket[1])));
+			}
 		} catch (IOException e) {
-                    e.printStackTrace();
+             e.printStackTrace();
 		}
 	}
 
