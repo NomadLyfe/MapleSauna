@@ -1,0 +1,76 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule: # nightly sanity check
+    - cron: "0 0 * * *"
+  workflow_dispatch: # manual trigger
+
+permissions:
+  contents: read # only need read of repo files
+
+concurrency:
+  group: ci-${{ github.ref_name }} # one run per branch
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-and-smoke:
+    name: Build & Smoke-Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "8"
+
+      - name: Compile server
+        run: |
+          chmod +x linux-compile.sh
+          ./linux-compile.sh
+
+      - name: Verify artifacts
+        run: |
+          echo "=== dist directory ==="
+          ls -R dist
+
+      - name: Smoke-test startup
+        run: |
+          chmod +x linux-launch.sh
+          timeout 15s ./linux-launch.sh & PID=$!
+          sleep 5
+          if ps -p $PID > /dev/null; then
+            echo "✅ Server started"
+            kill $PID
+          else
+            echo "❌ Server failed to start"
+            exit 1
+          fi
+
+  docker-build:
+    name: Build & Push Docker Image
+    needs: build-and-smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build & Push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:cache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:cache,mode=max

@@ -161,7 +161,8 @@ server:
   USE_THREAD_TRACKER: false #[SEVERE] This deadlock auditing thing will bloat the memory as fast as the time frame one takes to lose track of a raindrop on a tempesting day. Only for debugging purposes.
 
   #Database Configuration
-  DB_URL: "jdbc:mysql://localhost:3306/maplesauna?characterEncoding=latin1"
+  # DB_URL: "jdbc:mysql://localhost:3306/maplesauna?characterEncoding=latin1"
+  DB_URL: "jdbc:mysql://db:3306/maplesauna?characterEncoding=latin1"
   DB_USER: "root"
   DB_PASS: "password"
   DB_CONNECTION_POOL: false #Installs a connection pool to hub DB connections. Set false to default.
@@ -198,8 +199,9 @@ server:
 
   #Ip Configuration
   # HOST: 127.0.0.1
-  HOST: 136.55.191.155
   # HOST: 192.168.1.183
+  # HOST: 136.55.191.155
+  HOST: 0.0.0.0
   LOCALSERVER: true
   GMSERVER: false
 
