@@ -23,7 +23,7 @@ services:
     container_name: maplesauna-db
     environment:
       MYSQL_DATABASE: maplesauna
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
     ports:

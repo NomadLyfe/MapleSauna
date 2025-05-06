@@ -1,6 +1,5 @@
 ﻿/logs/**
 .idea/
-docker-compose.yml
 
 # build files
 
